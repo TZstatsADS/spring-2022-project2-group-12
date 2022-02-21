@@ -1,0 +1,48 @@
+---
+title: "project 2 preparation"
+output: html_notebook
+---
+```{r setup, warning=FALSE, message=FALSE,echo=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+install.packages("tibbletime")
+library(tibbletime)
+library(dplyr)
+```
+
+
+
+```{r read data, warning=FALSE, message=FALSE}
+file<-'../../data/NYPD_Arrest_Data__Year_to_Date_.csv'
+data_2021 <- read.csv(file)
+file2 <- '../../data/NYPD_Arrests_Data__Historic_.csv'
+data_2006_2020 <- read.csv(file2)
+```
+
+```{r chr to date}
+data_2021 <- data_2021 %>%
+  mutate(ARREST_DATE = as.Date(data_2021$ARREST_DATE, "%m/%d/%Y"))
+
+
+data_2006_2020 <- data_2006_2020 %>%
+  mutate(ARREST_DATE = as.Date(data_2006_2020$ARREST_DATE, "%m/%d/%Y"))
+
+
+```
+
+
+```{r filter history data}
+data_2019_2020 <- data_2006_2020 %>%
+  filter(ARREST_DATE >= as.Date("2019-01-01"), ARREST_DATE <= as.Date("2020-12-31"))
+```
+
+```{r}
+colnames(data_2021) [19] <- "Lon_Lat"
+
+data_2019_2021 <- data_2019_2020 %>%
+  full_join(data_2021)
+```
+
+
