@@ -32,7 +32,7 @@ if (!require("viridis")) {
 }
 
 getwd()
-setwd('Downloads')
+setwd("/Users/jiuruwang/Documents/GitHub/Stat 5243 Projects/spring-2022-project2-group-12/app")
 df <- read.csv("NYPD_Complaint_Data_Current__Year_To_Date_.csv")
 #df$CMPLNT_FR_DT = as.Date(df$CMPLNT_FR_DT,format = "%m/%d/%Y")
 #df$year = format(df$CMPLNT_FR_DT,'%Y')
