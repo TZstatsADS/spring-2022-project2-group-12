@@ -40,11 +40,30 @@ if (!require("viridis")) {
     install.packages("viridis")
     library(viridis)
 }
-
-
-
-
-
+if (!require("sf")) {
+  install.packages("sf")
+  library(sf)
+}
+if (!require("tigris")) {
+  install.packages("tigris")
+  library(tigris)
+}
+if (!require("leaflet")) {
+  install.packages("leaflet")
+  library(leaflet)
+}
+if (!require("geosphere")) {
+  install.packages("geosphere")
+  library(geosphere)
+}
+if (!require("htmltools")) {
+  install.packages("htmltools")
+  library(htmltools)
+}
+if (!require("htmlwidgets")) {
+  install.packages("htmlwidgets")
+  library(htmlwidgets)
+}
 
 #===============================================Shiny UI=========================================================
 
@@ -58,11 +77,15 @@ ui <- navbarPage(
                 
                 selectInput(inputId = "period",
                             label = "Choose a time period", 
-                            choices = c("Overall Period","Covid Period"))
+                            choices = c("Overall Period","Covid Period")),
+                selectInput(inputId = "date",
+                            label = "Select a date (month ending in):",
+                            choices = levels(as.factor(unique(shooting_map_sp$OCCUR_YM))))
             ),
             
             mainPanel(
-                plotlyOutput(outputId = "shooting")            
+                plotlyOutput(outputId = "shooting"),
+                leafletOutput("shooting_map_interactive")
                 )
         )
     )
@@ -93,6 +116,9 @@ shinyServer <- function(input, output) {
                         filter(OCCUR_YM >= "2020-03-01") %>% 
                         group_by(OCCUR_YM, BORO) %>%
                         summarise(count = n())
+    
+    shooting_map_sp <- readRDS("shooting_map_sp.RDS")
+    shooting_map_sp <- shooting_map_sp %>% arrange(OCCUR_YM)
     
     output$shooting <- renderPlotly({
         if("Overall Period" %in% input$period){
@@ -125,6 +151,40 @@ shinyServer <- function(input, output) {
         }
         
         })
+    
+    monthly_shooting <- reactive({
+      m <- shooting_map_sp %>% filter(OCCUR_YM == input$date)
+      return(m)
+    })
+    
+    output$shooting_map_interactive <- renderLeaflet({
+      labels <- sprintf("<strong>%s</strong><br/>%s<br/>%s<br/>%g shooting cases", monthly_shooting()$BORO, monthly_shooting()$MODZCTA, 
+                        monthly_shooting()$OCCUR_YM,monthly_shooting()$count) %>%
+        lapply(htmltools::HTML)
+      
+      pal <- colorBin(palette = "OrRd", 9, domain= shooting_map_sp$count, bins = c(1,2,4,6,8,10,15,20,31)) # caution: the bins are not equally sized 
+      
+      monthly_shooting() %>%
+        st_transform(crs = "+init=epsg:4326") %>%
+        leaflet() %>%
+        addProviderTiles(provider = "CartoDB.Positron") %>%
+        setView(-73.9, 40.7, zoom = 10) %>%     # for initial view of NYC
+        addPolygons(label = labels,
+                    stroke = FALSE,
+                    smoothFactor = .5,
+                    opacity = 1,
+                    fillOpacity = 0.7,
+                    fillColor = ~pal(monthly_shooting()$count),
+                    highlightOptions = highlightOptions(weight =5,
+                                                        fillOpacity = 1,
+                                                        opacity = 1,
+                                                        bringToFront = TRUE)) %>%
+        addLegend("bottomright",
+                  pal = pal,
+                  values = ~ count,
+                  title = "Shooting Cases",
+        )
+    })
     
   
   
