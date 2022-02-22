@@ -50,21 +50,27 @@ ui <- navbarPage(theme = shinytheme("darkly"), id="nav", windowTitle = "crime pr
         
         
         
-        
+        selectInput(inputId = "by", 
+                    label = h5("Select By Year or By Month"), 
+                    choices = list("Year" ,"Month"), selected = 1),
         
         
         selectInput(inputId = "year",
-                    label = "Choose a year", 
+                    label = h5("Choose a specific year"), 
                     choices = c("2019","2020","2021")),
+                    
     
         
         
       ),
       
       mainPanel(
-        plotlyOutput("Plot1"),
-        plotlyOutput('Plot2'),
-        plotlyOutput('Plot3'),
+        #plotlyOutput('Plotall1'),
+        
+        
+        plotlyOutput('ARPlot1'),
+        plotlyOutput('ARPlot2'),
+        plotlyOutput('ARPlot3'),
         position = "right"
       )
     )
@@ -76,6 +82,8 @@ shinyServer <- function(input, output) {
   
   df$ARREST_DATE = as.Date(df$ARREST_DATE,format = "%Y-%m-%d")
   df$year = format(df$ARREST_DATE,'%Y')
+  df$month = format(df$ARREST_DATE,'%m')
+  df$YY_MM = paste(df$year, df$month, sep = '/')
   df["ARREST_BORO"][df["ARREST_BORO"] == "B"] <- "Bronx"
   df["ARREST_BORO"][df["ARREST_BORO"] == "K"] <- "Brooklyn"
   df["ARREST_BORO"][df["ARREST_BORO"] == "M"] <- "Manhattan"
@@ -86,29 +94,48 @@ shinyServer <- function(input, output) {
   df["LAW_CAT_CD"][df["LAW_CAT_CD"] == "M"] <- "Misdemeanor"
   df["LAW_CAT_CD"][df["LAW_CAT_CD"] == "V"] <- "Violation"
   
+  
+  
+  
+  
+  by_chosen <- reactive({
+    if ( "Year" %in% input$by){
+      
+      data <- df1_2019
+      return( data ) 
+    }
+    
+    
+    
+    
+    
+  })
+  
+  
   year_chosen <- reactive({
+   
     if ( "2019" %in% input$year){
       df1_2019 = df[df$year=='2019',]
-      df1_2019$month = format(df1_2019$ARREST_DATE,'%m')
+      #df1_2019$month = format(df1_2019$ARREST_DATE,'%m')
       data <- df1_2019
       return( data ) 
     }
     if ( "2020" %in% input$year){
       df1_2020 = df[df$year=='2020',]
-      df1_2020$month = format(df1_2020$ARREST_DATE,'%m')
+      #df1_2020$month = format(df1_2020$ARREST_DATE,'%m')
       data <- df1_2020
       return( data ) 
     }
     if ( "2021" %in% input$year){
       df1_2021 = df[df$year=='2021',]
-      df1_2021$month = format(df1_2021$ARREST_DATE,'%m')
+      #df1_2021$month = format(df1_2021$ARREST_DATE,'%m')
       data <- df1_2021
       return( data ) 
     }
  
   })
   
-  output$Plot1 <- renderPlotly({
+  output$ARPlot1 <- renderPlotly({
     data <- year_chosen() %>% group_by(ARREST_BORO,month)%>%
       summarise(count = n())
     
@@ -131,7 +158,7 @@ shinyServer <- function(input, output) {
   
 
   
-  output$Plot2 <- renderPlotly({
+  output$ARPlot2 <- renderPlotly({
     target <- c('Felony', 'Misdemeanor', 'Violation')
     data <- year_chosen() %>% 
       filter(LAW_CAT_CD %in% target) %>%
@@ -155,7 +182,7 @@ shinyServer <- function(input, output) {
   })
 
   
-  output$Plot3 <- renderPlotly({
+  output$ARPlot3 <- renderPlotly({
     target <- c('Felony', 'Misdemeanor', 'Violation')
     data <- year_chosen() %>%
       filter(LAW_CAT_CD %in% target) %>%
