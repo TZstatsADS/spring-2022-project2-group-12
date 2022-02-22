@@ -95,7 +95,7 @@ nyc_covid_data <- data_by_modzcta %>%
   )
 
 # Import geojson file from NYC open data
-nyc_zipcode_geo <- st_read("ZIP_CODE_040114/ZIP_CODE_040114.shp") %>%
+nyc_zipcode_geo <- st_read("data/ZIP_CODE_040114/ZIP_CODE_040114.shp") %>%
   st_transform('+proj=longlat +datum=WGS84')
 nyc_zipcode_geo$ZIPCODE <- type.convert(nyc_zipcode_geo$ZIPCODE, as.is = TRUE)
 
