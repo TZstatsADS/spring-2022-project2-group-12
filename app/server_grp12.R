@@ -61,7 +61,78 @@ shinyServer <-function(input, output, session) {
     
     leafletProxy("nyc_map_covid")
 }) # end of tab
-   
+  
+  
+    ####################### Tab 3 Shooting  ##################
+  
+  output$shooting <- renderPlotly({
+    if("Overall Period" %in% input$period){
+      ggplot(shooting_all_overall, aes(x = OCCUR_YM, y = count, group = BORO, color = BORO)) +
+        geom_line()+
+        scale_color_viridis(discrete = TRUE, option = "G") +
+        scale_x_date(breaks = "1 year", date_labels = "%b-%y") +
+        labs(y = "Number of Shooting Occurred", x = "Date", title = "NYC Shooting Occurrence Since 2006") +
+        guides(color=guide_legend(title="Location")) +
+        theme_bw() +
+        theme(axis.text.x = element_text(angle = 45),
+              axis.text.y = element_text(angle = 45),
+              plot.title = element_text(hjust = 0.5),panel.background = element_rect(fill = "white"))
+      
+      ggplotly(width = 1000)
+    }
+    else if("Covid Period" %in% input$period){
+      ggplot(shooting_all_covid, aes(x = OCCUR_YM, y = count, group = BORO, color = BORO)) +
+        geom_line()+
+        scale_color_viridis(discrete = TRUE, option = "G") +
+        scale_x_date(breaks = "1 month", date_labels = "%b-%y") +
+        labs(y = "Number of Shooting Occurred", x = "Date", title = "NYC Shooting Occurrence During Covid") +
+        guides(color=guide_legend(title="Location")) +
+        theme_bw() +
+        theme(axis.text.x = element_text(angle = 45),
+              axis.text.y = element_text(angle = 45),
+              plot.title = element_text(hjust = 0.5),panel.background = element_rect(fill = "white"))
+      
+      ggplotly(width = 1000)
+    }
+    
+  })
+  
+  monthly_shooting <- reactive({
+    m <- shooting_map_sp %>% filter(OCCUR_YM == input$date)
+    return(m)
+  })
+  
+  output$shooting_map_interactive <- renderLeaflet({
+    labels <- sprintf("<strong>%s</strong><br/>%s<br/>%s<br/>%g shooting cases", monthly_shooting()$BORO, monthly_shooting()$MODZCTA, 
+                      monthly_shooting()$OCCUR_YM,monthly_shooting()$count) %>%
+      lapply(htmltools::HTML)
+    
+    pal <- colorBin(palette = "OrRd", 9, domain= shooting_map_sp$count, bins = c(1,2,4,6,8,10,15,20,31)) # caution: the bins are not equally sized 
+    
+    monthly_shooting() %>%
+      st_transform(crs = "+init=epsg:4326") %>%
+      leaflet() %>%
+      addProviderTiles(provider = "CartoDB.Positron") %>%
+      setView(-73.9, 40.7, zoom = 10) %>%     # for initial view of NYC
+      addPolygons(label = labels,
+                  stroke = FALSE,
+                  smoothFactor = .5,
+                  opacity = 1,
+                  fillOpacity = 0.7,
+                  fillColor = ~pal(monthly_shooting()$count),
+                  highlightOptions = highlightOptions(weight =5,
+                                                      fillOpacity = 1,
+                                                      opacity = 1,
+                                                      bringToFront = TRUE)) %>%
+      addLegend("bottomright",
+                pal = pal,
+                values = ~ count,
+                title = "Shooting Cases",
+      )
+  })
+  # end of tab
+  
+  
     ####################### Tab 4 Hate Crime ##################
   output$Plot1 <- renderPlot({
     if(input$option1 == 1) {

@@ -17,7 +17,10 @@ if (!require("shinythemes")) {
   install.packages("shinythemes")
   library(shinythemes)
 }
-
+if (!require("readr")) {
+  install.packages("readr")
+  library(readr)
+}
 if (!require("sf")) {
   install.packages("sf")
   library(sf)
@@ -54,9 +57,17 @@ if (!require("ggplot2")) {
   install.packages("ggplot2")
   library(ggplot2)
 }
+if (!require("lubridate")) {
+  install.packages("lubridate")
+  library(lubridate)
+}
 if (!require("viridis")) {
   install.packages("viridis")
   library(viridis)
+}
+if (!require("tigris")) {
+  install.packages("tigris")
+  library(tigris)
 }
 if (!require("geosphere")) {
   install.packages("geosphere")
@@ -74,11 +85,31 @@ if (!require("DBI")) {
   install.packages("DBI")
   library(DBI)
 }
+if (!require("htmltools")) {
+  install.packages("htmltools")
+  library(htmltools)
+}
+if (!require("htmlwidgets")) {
+  install.packages("htmlwidgets")
+  library(htmlwidgets)
+}
+if (!require("httr")) {
+  install.packages("httr")
+  library(httr)
+}
+if (!require("rvest")) {
+  install.packages("rvest")
+  library(rvest)
+}
+if (!require("stringr")) {
+  install.packages("stringr")
+  library(stringr)
+}
+if (!require("jsonlite")) {
+  install.packages("jsonlite")
+  library(jsonlite)
+}
 
-library(httr)
-library(rvest)
-library(stringr)
-library(jsonlite)
 
 #--------------------------------------------------------------------
 #------------------------Dataset Processing--------------------------
@@ -174,4 +205,71 @@ covid_data_m_l<- covid_data %>%
 data_m_loc <- mod_data[mod_data$Bias.Motive.Description=="ANTI ASIAN",] %>%
   group_by(YY_MM, County) %>%
   summarise(count=n())
+
+
+
+
+
+#### #### #### ####    shooting tap data processing #### #### #### #### #### #### 
+
+######################## shooting trend plot data wrangling
+shooting_recent <- read_csv("../data/NYPD_Shooting_Incident_Data__Year_To_Date_.csv")
+shooting_historic <- read_csv("../data/NYPD_Shooting_Incident_Data__Historic.csv")
+shooting_recent <- shooting_recent %>% rename(`Lon_Lat` = `New Georeferenced Column`)
+shooting_all <- rbind(shooting_recent, shooting_historic) # combine two datasets using rbind()
+
+shooting_all_overall <- shooting_all %>% 
+  mutate(OCCUR_DATE = as.Date(OCCUR_DATE, "%m/%d/%Y"),
+         OCCUR_YM =  floor_date(OCCUR_DATE, unit = "month"),
+         BORO = as.factor(BORO)) %>%
+  group_by(OCCUR_YM, BORO) %>%
+  summarise(count = n())
+
+shooting_all_covid <- shooting_all %>% 
+  mutate(OCCUR_DATE = as.Date(OCCUR_DATE, format = "%m/%d/%Y"),
+         OCCUR_YM = floor_date(OCCUR_DATE, unit = "month"),
+         BORO = as.factor(BORO)) %>%
+  filter(OCCUR_YM >= "2020-03-01") %>% 
+  group_by(OCCUR_YM, BORO) %>%
+  summarise(count = n())
+
+######################## shooting map data 
+#shooting_map_data <- shooting_all %>% 
+#  mutate(OCCUR_DATE = as.Date(OCCUR_DATE, "%m/%d/%Y"),
+#         OCCUR_YM =  floor_date(OCCUR_DATE, unit = "month"),
+#         BORO = as.factor(BORO)) %>%
+#  filter(OCCUR_YM >= as.Date("2020-03-01")) %>%
+#  select(BORO,Longitude,Latitude,OCCUR_YM)
+
+#zipcode <- read.csv("../data/zc_geo.csv", sep = ";") %>% 
+#  select(Zip, Latitude, Longitude) 
+
+#match <- distm(shooting_map_data[,c("Longitude","Latitude")], zipcode[,c("Longitude","Latitude")], fun=distVincentyEllipsoid)
+#shooting_map_data$Zip <- zipcode$Zip[max.col(-match)]
+
+#zip_convert <- read_csv("../data/Geography-resources/ZCTA-to-MODZCTA.csv")
+
+# match with modified zip code 
+#shooting_map_data_join <- shooting_map_data %>%
+#  mutate(Zip = as.double(Zip)) %>%
+#  left_join(zip_convert, by= c("Zip" = "ZCTA")) %>%
+#  select(-c("Longitude","Latitude", "Zip")) %>%
+#  mutate(MODZCTA = as.character(MODZCTA)) %>%
+#  group_by(OCCUR_YM, MODZCTA, BORO) %>%
+#  summarise(count = n())
+
+
+#import shapefile 
+#modzcta <- sf::st_read("../data/Geography-resources/MODZCTA_2010.shp")
+# join spatial data 
+#shooting_map_sp <- geo_join(modzcta, shooting_map_data_join, 'MODZCTA', 'MODZCTA', how = "inner")
+#saveRDS(shooting_map_sp, "shooting_map_sp.RDS")
+
+
+shooting_map_sp <- readRDS("../data/shooting_map_sp.RDS")
+shooting_map_sp <- shooting_map_sp %>% arrange(OCCUR_YM)
+
+
+
+
 
