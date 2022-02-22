@@ -39,8 +39,8 @@ if (!require("shinydashboard")) {
   library(shinydashboard)
 }
 getwd()
-#setwd('Downloads')
-df <- read.csv("Arrest_2019_2021.csv")
+#setwd('/Users/jiuruwang/Documents/GitHub/Stat 5243 Projects/spring-2022-project2-group-12/app/overall arrest')
+df <- read.csv("../../data/Arrest_2019_2021.csv")
 df <- df[!(is.na(df$LAW_CAT_CD) | df$LAW_CAT_CD==""), ]
 unique(df$LAW_CAT_CD)
 df$ARREST_BORO[df$ARREST_BORO == "B"] <- 'Bronx'
