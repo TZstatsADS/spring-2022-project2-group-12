@@ -83,18 +83,38 @@ ui <- navbarPage(
     )
   ),
   #################### tab 2:  ####################
-  tabPanel(
-    "tab2",
-    
+  tabPanel("Map",
+           h2("Confirmed Cases in Each Borough", align = 'center'),
+           leafletOutput("nyc_map_covid", width = "100%", height = 800)
   ),
   
   
 
   #################### tab 3: Map#################### 
-  tabPanel("Map",
-            h2("Confirmed Cases in Each Borough", align = 'center'),
-            leafletOutput("nyc_map_covid", width = "100%", height = 800)
-    ),
+
+  
+  tabPanel(
+    "Shooting",
+    sidebarLayout(
+      sidebarPanel(
+        
+        selectInput(inputId = "period",
+                    label = "Choose a time period", 
+                    choices = c("Overall Period","Covid Period")),
+        selectInput(inputId = "date",
+                    label = "Select a date (month ending in):",
+                    choices = levels(as.factor(unique(shooting_map_sp$OCCUR_YM))))
+      ),
+      
+      mainPanel(
+        plotlyOutput(outputId = "shooting"),
+        leafletOutput("shooting_map_interactive")
+      )
+    )
+  ),
+  
+  
+  
   #################### tab 4: #################### 
   tabPanel(
     "Hate Crime",

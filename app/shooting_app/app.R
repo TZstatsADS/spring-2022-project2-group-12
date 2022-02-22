@@ -65,6 +65,9 @@ if (!require("htmlwidgets")) {
   library(htmlwidgets)
 }
 
+shooting_map_sp <- readRDS("shooting_map_sp.RDS")
+shooting_map_sp <- shooting_map_sp %>% arrange(OCCUR_YM)
+
 #===============================================Shiny UI=========================================================
 
 ui <- navbarPage(
@@ -117,8 +120,7 @@ shinyServer <- function(input, output) {
                         group_by(OCCUR_YM, BORO) %>%
                         summarise(count = n())
     
-    shooting_map_sp <- readRDS("shooting_map_sp.RDS")
-    shooting_map_sp <- shooting_map_sp %>% arrange(OCCUR_YM)
+
     
     output$shooting <- renderPlotly({
         if("Overall Period" %in% input$period){
