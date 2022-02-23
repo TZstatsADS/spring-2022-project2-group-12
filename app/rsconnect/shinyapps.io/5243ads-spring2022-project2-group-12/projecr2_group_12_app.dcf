@@ -5,10 +5,10 @@ account: 5243ads-spring2022-project2-group-12
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 5714926
-bundleId: 5608142
+bundleId: 5608370
 url: https://5243ads-spring2022-project2-group-12.shinyapps.io/projecr2_group_12_app/
-when: 1645591243.25976
-lastSyncTime: 1645591243.25976
+when: 1645597788.91066
+lastSyncTime: 1645597788.91069
 asMultiple: FALSE
 asStatic: FALSE
-ignoredFiles: complaints_trend.R|README.md|shooting_app/.DS_Store|shooting_app/.Rhistory|shooting_app/app.R|confirmed_cases_by_borogh_map|overall arrest
+ignoredFiles: complaints_trend.R|global_grp12.R|README.md|server.R|shooting_app/.DS_Store|shooting_app/.Rhistory|shooting_app/app.R|ui.R|confirmed_cases_by_borogh_map|overall arrest

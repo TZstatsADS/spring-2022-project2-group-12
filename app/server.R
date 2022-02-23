@@ -7,6 +7,7 @@
 #    http://shiny.rstudio.com/
 #
 source("global_grp12.R")
+#source("ui.R")
 
 library(shiny)
 
@@ -465,4 +466,3 @@ shinyServer <-function(input, output, session) {
 
 }
 
-shiny::shinyApp(ui = ui, shinyServer)
