@@ -24,7 +24,7 @@ shinyServer <-function(input, output, session) {
     left_join(nyc_covid_data, by = c("ZIPCODE"="MODIFIED_ZCTA"))
     #left_join(nyc_shooting_data, by = c("ZIPCODE"="Zip"))
   
-  pal <- colorFactor(palette = c('yellow', 'green', 'orange', 'red', 'blue'),domain = nyc_covid_data$BOROUGH_GROUP)
+  pal <- colorFactor(palette =c('lightblue1', 'lightpink', 'darksalmon', 'darkseagreen2', 'lavender'), domain = nyc_covid_data$BOROUGH_GROUP)
   
   observe({
     output$nyc_map_covid = renderLeaflet({
@@ -43,20 +43,14 @@ shinyServer <-function(input, output, session) {
         addCircleMarkers(
           data = nyc_zipcode_geo,
           lng = ~LNG_repre, lat = ~LAT_repre,
-          color = ~pal(BOROUGH_GROUP), fillOpacity = 0.7,
+          color = ~pal(BOROUGH_GROUP), fillOpacity = 0.8,
           radius = ~(COVID_CASE_COUNT)/1000, 
           popup = ~(paste0(
             "<b>Zip Code: ", ZIPCODE,
             "</b><br/>Confirmed Cases: ", COVID_CASE_COUNT
           )),
           group = "Covid Cases"
-        ) %>%
-        addCircles(
-          data = nyc_shooting_data,
-          radius = 0.7,
-          color = 'black',
-          opacity = 1,
-          lng = ~Longitude, lat = ~Latitude, popup = "Shooting Case")
+        ) 
     }) # end of observe
     
     leafletProxy("nyc_map_covid")
@@ -134,19 +128,23 @@ shinyServer <-function(input, output, session) {
   
   
     ####################### Tab 4 Hate Crime ##################
-  output$Plot1 <- renderPlot({
+  output$Plot1 <- renderPlotly({
     if(input$option1 == 1) {
       ggplot(data=anti_data_y)+
         geom_line(mapping = aes(x=Complaint.Year.Number,  y=count, group = Bias.Motive.Description, col=Bias.Motive.Description))+
         labs(x="Year", y="Number of Crimes")+
         theme_classic() +
-        theme(axis.text.x = element_text(face="bold", size=14),axis.text.y = element_text(face="bold", size=11))}
+        theme(axis.text.x = element_text(face="bold", size=14),axis.text.y = element_text(face="bold", size=11))
+      
+      ggplotly()}
     else if(input$option1 == 2){
       ggplot(data=anti_data_m)+
         geom_line(mapping = aes(x=YY_MM,  y=count, group = Bias.Motive.Description, col=Bias.Motive.Description))+
         labs(xlabel="YY/MM", y="Number of Crimes")+
         theme_classic() +
         theme(axis.text.x = element_text(face="bold", size=11, angle = 90), axis.text.y = element_text(face="bold", size=11))
+      
+      ggplotly()
       }
     })
   
@@ -166,7 +164,9 @@ shinyServer <-function(input, output, session) {
         scale_color_manual(labels = c("ANTI-ASIAN", 
                                       "Covid New Cases"), 
                            values = c("ANTI-ASIAN"="black", 
-                                      "Covid New Cases"="light blue"))}
+                                      "Covid New Cases"="light blue"))
+      
+      }
     else if(input$option2 == 2){
       anti_data_m_aa <- anti_data_m[anti_data_m$Bias.Motive.Description=="ANTI BLACK",]
       ggplot()+
@@ -182,7 +182,9 @@ shinyServer <-function(input, output, session) {
         scale_color_manual(labels = c("ANTI-ASIAN", 
                                       "Covid New Cases"), 
                            values = c("ANTI-BLACK"="black", 
-                                      "Covid New Cases"="light blue"))}
+                                      "Covid New Cases"="light blue"))
+      
+      }
     else if(input$option2 == 3){
       anti_data_m_aa <- anti_data_m[anti_data_m$Bias.Motive.Description=="ANTI JEWISH",]
       ggplot()+
@@ -198,7 +200,9 @@ shinyServer <-function(input, output, session) {
         scale_color_manual(labels = c("ANTI-JEWISH", 
                                       "Covid New Cases"), 
                            values = c("ANTI-JEWISH"="black", 
-                                      "Covid New Cases"="light blue"))}
+                                      "Covid New Cases"="light blue"))
+      
+      }
     else if(input$option2 == 4){
       anti_data_m_aa <- anti_data_m[anti_data_m$Bias.Motive.Description=="ANTI MALE HOMOSEXUAL (GAY)",]
       ggplot()+
@@ -214,7 +218,9 @@ shinyServer <-function(input, output, session) {
         scale_color_manual(labels = c("ANTI-ANTI MALE HOMOSEXUAL (GAY)", 
                                       "Covid New Cases"), 
                            values = c("ANTI-ANTI MALE HOMOSEXUAL (GAY)"="black", 
-                                      "Covid New Cases"="light blue"))}
+                                      "Covid New Cases"="light blue"))
+      
+      }
     else if(input$option2 == 5){
       anti_data_m_aa <- anti_data_m[anti_data_m$Bias.Motive.Description=="OTHER ANTI TYPE",]
       ggplot()+
@@ -230,7 +236,9 @@ shinyServer <-function(input, output, session) {
         scale_color_manual(labels = c("OTHER ANTI TYPE", 
                                       "Covid New Cases"), 
                            values = c("OTHER ANTI TYPE"="black", 
-                                      "Covid New Cases"="light blue"))}
+                                      "Covid New Cases"="light blue"))
+      
+      }
     })
   
   output$Plot3 <- renderPlot({
@@ -239,7 +247,7 @@ shinyServer <-function(input, output, session) {
       data_m_with_loc <- data_m_loc[data_m_loc$County=="MANHATTAN",]
       ggplot()+
         geom_line(data=data_m_with_loc, mapping = aes(x=YY_MM,  y=count, group = 1))+
-        geom_line(data=covid_data_m_l, mapping = aes(x=YY_MM,  y=`sum(MANHATTAN)`/1000,group=1),col="light blue")+
+        geom_line(data=covid_data_m_l, mapping = aes(x=YY_MM,  y=`sum(MANHATTAN)`/1000, group=1),col="light blue")+
         scale_y_continuous(
           name = "The Number of ANTI-ASIAN Crimes in Manhattan",
           sec.axis = sec_axis( trans=~.*1000, name="Covid New Cases in Manhattan")
@@ -248,9 +256,11 @@ shinyServer <-function(input, output, session) {
         theme_classic() +
         theme(axis.text.x = element_text(face="bold", size=11, angle = 90),axis.text.y = element_text(face="bold", size=11))+
         scale_color_manual(labels = c("ANTI-ASIAN Crimes in Manhattan", 
-                                      "Covid New Cases in Manhattan"), 
+                                     "Covid New Cases in Manhattan"), 
                            values = c("ANTI-ASIAN Crimes in Manhattan"="black", 
-                                      "Covid New Cases in Manhattan"="light blue"))}
+                                      "Covid New Cases in Manhattan"="light blue"))
+      
+      }
   
     else if(input$option3 == 2){
       data_m_with_loc <- data_m_loc[data_m_loc$County=="BRONX",]
@@ -266,9 +276,11 @@ shinyServer <-function(input, output, session) {
         theme(axis.text.x = element_text(face="bold", size=11, angle = 90),axis.text.y = element_text(face="bold", size=11))+
         theme(legend.title = element_blank())+
         scale_color_manual(labels = c("ANTI-ASIAN Crimes in Bronx", 
-                                      "Covid New Cases in Bronx"), 
+                                     "Covid New Cases in Bronx"), 
                            values = c("ANTI-ASIAN Crimes in Bronx"="black", 
-                                      "Covid New Cases in Bronx"="light blue"))}
+                                      "Covid New Cases in Bronx"="light blue"))
+      
+      }
     
     else if(input$option3 == 3){
       
@@ -286,7 +298,9 @@ shinyServer <-function(input, output, session) {
         scale_color_manual(labels = c("ANTI-ASIAN Crimes in Kings", 
                                       "Covid New Cases in Kings"), 
                            values = c("ANTI-ASIAN Crimes in Kings"="black", 
-                                      "Covid New Cases in Kings"="light blue"))}
+                                      "Covid New Cases in Kings"="light blue"))
+      
+      }
     
     else if(input$option3 == 4){
       data_m_with_loc <- data_m_loc[data_m_loc$County=="QUEENS",]
@@ -303,7 +317,9 @@ shinyServer <-function(input, output, session) {
         scale_color_manual(labels = c("ANTI-ASIAN Crimes in Queens", 
                                       "Covid New Cases in Queens"), 
                            values = c("ANTI-ASIAN Crimes in Queens"="black", 
-                                      "Covid New Cases in Queens"="light blue"))}
+                                      "Covid New Cases in Queens"="light blue"))
+      
+      }
 
     else if(input$option3 == 5){
       data_m_with_loc <- data_m_loc[data_m_loc$County=="STATEN ISLAND",]
@@ -320,7 +336,9 @@ shinyServer <-function(input, output, session) {
         scale_color_manual(labels = c("ANTI-ASIAN Crimes in Staten Island", 
                                       "Covid New Cases in Staten Island"), 
                            values = c("ANTI-ASIAN Crimes in Staten Island"="black", 
-                                      "Covid New Cases in Staten Island"="light blue"))}
+                                      "Covid New Cases in Staten Island"="light blue"))
+      
+      }
   }) 
   
   # end of tab
@@ -447,4 +465,4 @@ shinyServer <-function(input, output, session) {
 
 }
 
-shiny::shinyApp(ui, shinyServer)
+shiny::shinyApp(ui = ui, shinyServer)

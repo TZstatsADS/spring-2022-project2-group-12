@@ -281,7 +281,7 @@ df$YY_MM = paste(df$year, df$month, sep = '/')
 df["ARREST_BORO"][df["ARREST_BORO"] == "B"] <- "Bronx"
 df["ARREST_BORO"][df["ARREST_BORO"] == "K"] <- "Brooklyn"
 df["ARREST_BORO"][df["ARREST_BORO"] == "M"] <- "Manhattan"
-df["ARREST_BORO"][df["ARREST_BORO"] == "Q"] <- "Qweens"
+df["ARREST_BORO"][df["ARREST_BORO"] == "Q"] <- "Queens"
 df["ARREST_BORO"][df["ARREST_BORO"] == "S"] <- "Staten Island"
 
 df["LAW_CAT_CD"][df["LAW_CAT_CD"] == "F"] <- "Felony"

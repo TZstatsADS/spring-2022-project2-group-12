@@ -53,32 +53,16 @@ ui <- navbarPage(
         absolutePanel(
           style = "background-color: white",
           style = "opacity: 0.90",
-          top = "40%",
+          top = "50%",
           left = "25%",
           right = "25%",
           height = 100,
-          tags$h3("Target User", style = "color: white"),
+          tags$h4("Target User", style = "color: white"),
           tags$hr(),
           tags$p(
             style = "padding: 3%; background-color: white; font-family: alegreya; font-size: 100%; opacity: 0.90",
             "This application is designed to provide", strong("government officials"), "with a better visualization of how the pandemic has affected different kinds of crimes, as well as to assist them in better decision-making when similar events happen again."
-          )),
-        absolutePanel(
-          style = "background-color: white",
-          style = "opacity: 0.90",
-          top = "65%",
-          left = "25%",
-          right = "25%",
-          height = 150,
-          tags$h3("Interaction with the App", style = "color: white"),
-          tags$hr(),
-          tags$ul(
-            style = "padding: 4%; background-color: white; font-family: alegreya; font-size: 100%; opacity: 0.90",
-            tags$li("The", strong("first"), "tab: Introduction"),
-            tags$li("The", strong("second"), "tab: "),
-            tags$li("The", strong("third and fourth"), "tab: "),
-            tags$li("The", strong("fifth"),"tab: Reference")
-        ))
+          ))
     )
   ),
   #################### tab 2:  ####################
@@ -93,7 +77,7 @@ ui <- navbarPage(
 
   
   tabPanel(
-    "Shooting",
+    "Shooting Trends",
     sidebarLayout(
       sidebarPanel(
         
@@ -116,7 +100,7 @@ ui <- navbarPage(
   
   #################### tab 4: #################### 
   tabPanel(
-    "Hate Crime",
+    "Hate Crime Trends",
     fluidPage(
       titlePanel("Did the number of hate crimes increase after COVID?"),
       sidebarLayout(
@@ -133,7 +117,7 @@ ui <- navbarPage(
                                   choices = list("Manhattan"=1 ,"Bronx"=2,"Kings"=3,"Queens"=4, "Staten Island"=5), selected = 1)),
         
         mainPanel(h3("Different Types of Hate Crimes Vs Covid New Cases in Different Areas"), 
-                  plotOutput("Plot1"), 
+                  plotlyOutput("Plot1"), 
                   h3("Hate Crime Vs Covid New Cases"), 
                   plotOutput("Plot2"), 
                   h3("ANTI-ASIAN Cases in Different Areas"), 
@@ -147,7 +131,7 @@ ui <- navbarPage(
   
   
   ################### tab 5: Arrest
-  tabPanel("Arrest",
+  tabPanel("Arrest Records",
            fluidPage(
              titlePanel("Did the number of arrests in New York affected COVID?"),
              tags$p("An unexpected fact: number of arrests decreased in 2020 than before COVID-19. But it is worth mentioning, with New York City reportedly experienced a dramatic increase of number in arrests in the month of May,2020 where the pandemic was at its peak.", style="color:black"),
@@ -210,7 +194,19 @@ ui <- navbarPage(
     tags$a(
       href = "https://data.cityofnewyork.us/Business/Zip-Code-Boundaries/i8iw-xf4u/data",
       "data.cityofnewyork.us/Business/Zip-Code-Boundaries"
-    ),
+    ),br(),
+    tags$a(
+      href = "https://data.cityofnewyork.us/Public-Safety/NYPD-Arrests-Data-Historic-/8h9b-rp9u",
+      "data.cityofnewyork.us/Public-Safety/NYPD-Arrests-Data-Historic"
+    ),br(),
+    tags$a(
+      href = "https://data.cityofnewyork.us/Public-Safety/NYPD-Arrest-Data-Year-to-Date-/uip8-fykc",
+      "data.cityofnewyork.us/Public-Safety/NYPD-Arrest-Data-Year-to-Date"
+    ),br(),
+    tags$a(
+      href = "https://data.cityofnewyork.us/Public-Safety/NYPD-Hate-Crimes/bqiq-cu78",
+      "data.cityofnewyork.us/Public-Safety/NYPD-Hate-Crimes"
+    ),br(),
     tags$h2(
       "Created By:"
     ),
