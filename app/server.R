@@ -264,10 +264,8 @@ shinyServer <-function(input, output, session) {
         
         theme_classic() +
         theme(axis.text.x = element_text(face="bold", size=11, angle = 90),axis.text.y = element_text(face="bold", size=11))+
-        scale_color_manual(labels = c("ANTI-ASIAN Crimes in Manhattan", 
-                                     "Covid New Cases in Manhattan"), 
-                           values = c("ANTI-ASIAN Crimes in Manhattan"="black", 
-                                      "Covid New Cases in Manhattan"="light blue"))
+        annotate("text", x=31, y=24, label= "Anti-Asian Crimes",size = 5, face = "bold")+
+        annotate("text", x=34, y=90, label= "Covid Cases",size = 5,color = "light blue",face="bold")
       
       }
   
@@ -283,11 +281,8 @@ shinyServer <-function(input, output, session) {
         
         theme_classic() +
         theme(axis.text.x = element_text(face="bold", size=11, angle = 90),axis.text.y = element_text(face="bold", size=11))+
-        theme(legend.title = element_blank())+
-        scale_color_manual(labels = c("ANTI-ASIAN Crimes in Bronx", 
-                                     "Covid New Cases in Bronx"), 
-                           values = c("ANTI-ASIAN Crimes in Bronx"="black", 
-                                      "Covid New Cases in Bronx"="light blue"))
+        annotate("text", x=31, y=10, label= "Anti-Asian Crimes",size = 5, face = "bold")+
+        annotate("text", x=34, y=90, label= "Covid Cases",size = 5,color = "light blue",face="bold")
       
       }
     
@@ -304,10 +299,8 @@ shinyServer <-function(input, output, session) {
         
         theme_classic() +
         theme(axis.text.x = element_text(face="bold", size=11, angle = 90),axis.text.y = element_text(face="bold", size=11))+
-        scale_color_manual(labels = c("ANTI-ASIAN Crimes in Kings", 
-                                      "Covid New Cases in Kings"), 
-                           values = c("ANTI-ASIAN Crimes in Kings"="black", 
-                                      "Covid New Cases in Kings"="light blue"))
+        annotate("text", x=31, y=10, label= "Anti-Asian Crimes",size = 5, face = "bold")+
+        annotate("text", x=34, y=90, label= "Covid Cases",size = 5,color = "light blue",face="bold")
       
       }
     
@@ -323,10 +316,8 @@ shinyServer <-function(input, output, session) {
         
         theme_classic() +
         theme(axis.text.x = element_text(face="bold", size=11, angle = 90),axis.text.y = element_text(face="bold", size=11))+
-        scale_color_manual(labels = c("ANTI-ASIAN Crimes in Queens", 
-                                      "Covid New Cases in Queens"), 
-                           values = c("ANTI-ASIAN Crimes in Queens"="black", 
-                                      "Covid New Cases in Queens"="light blue"))
+        annotate("text", x=31, y=10, label= "Anti-Asian Crimes",size = 5, face = "bold")+
+        annotate("text", x=34, y=90, label= "Covid Cases",size = 5,color = "light blue",face="bold")
       
       }
 
@@ -342,10 +333,8 @@ shinyServer <-function(input, output, session) {
         
         theme_classic() +
         theme(axis.text.x = element_text(face="bold", size=11, angle = 90),axis.text.y = element_text(face="bold", size=11))+
-        scale_color_manual(labels = c("ANTI-ASIAN Crimes in Staten Island", 
-                                      "Covid New Cases in Staten Island"), 
-                           values = c("ANTI-ASIAN Crimes in Staten Island"="black", 
-                                      "Covid New Cases in Staten Island"="light blue"))
+        annotate("text", x=31, y=10, label= "Anti-Asian Crimes",size = 5, face = "bold")+
+        annotate("text", x=34, y=90, label= "Covid Cases",size = 5,color = "light blue",face="bold")
       
       }
   }) 
