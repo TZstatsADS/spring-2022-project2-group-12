@@ -19,15 +19,18 @@ The **learning goals** for this project is:
 ## Project Title Lorem ipsum dolor sit amet
 Term: Spring 2022
 
-+ Team #
++ Team Group 12
 + **Projec title**: + Team members
-	+ team member 1
-	+ team member 2
-	+ team member 3
-	+ team member 4
-	+ team member 5
+	+ Nallamaddi, Shriya sn2956@columbia.edu
+	+ Tang, Shiqi st3349@columbia.edu
+	+ Wang, Jiuru jw4150@columbia.edu
+	+ Yu, Jiaxin jy3161@columbia.edu
+	+ Zhang, Nichole qz2446@columbia.edu
 
-+ **Project summary**: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
++ **Project summary**: 
+	+ This application specifically draws attention of how the pandemic affected the crime events in New York City. 
+         + The application start by examining the overall trend, and provide some interesting insights on the change of shooting cases, with a special focus on how the hate crime towards Asian people increased after the hit of Covid.
+          + Link to the app: https://gr5243proj2group12.shinyapps.io/proj2group12/ 
 
 + **Contribution statement**: ([default](doc/a_note_on_contributions.md)) All team members contributed equally in all stages of this project. All team members approve our work presented in this GitHub repository including this contributions statement. 
 
