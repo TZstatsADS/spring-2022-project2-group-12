@@ -272,4 +272,20 @@ shooting_map_sp <- shooting_map_sp %>% arrange(OCCUR_YM)
 
 
 
+#########################Data processing for arrest part
+df <- read.csv("../data/Arrest_2019_2021.csv")
+df$ARREST_DATE = as.Date(df$ARREST_DATE,format = "%Y-%m-%d")
+df$year = format(df$ARREST_DATE,'%Y')
+df$month = format(df$ARREST_DATE,'%m')
+df$YY_MM = paste(df$year, df$month, sep = '/')
+df["ARREST_BORO"][df["ARREST_BORO"] == "B"] <- "Bronx"
+df["ARREST_BORO"][df["ARREST_BORO"] == "K"] <- "Brooklyn"
+df["ARREST_BORO"][df["ARREST_BORO"] == "M"] <- "Manhattan"
+df["ARREST_BORO"][df["ARREST_BORO"] == "Q"] <- "Qweens"
+df["ARREST_BORO"][df["ARREST_BORO"] == "S"] <- "Staten Island"
+
+df["LAW_CAT_CD"][df["LAW_CAT_CD"] == "F"] <- "Felony"
+df["LAW_CAT_CD"][df["LAW_CAT_CD"] == "M"] <- "Misdemeanor"
+df["LAW_CAT_CD"][df["LAW_CAT_CD"] == "V"] <- "Violation"
+df["LAW_CAT_CD"][df["LAW_CAT_CD"] == "I"] <- "Infractions"
 

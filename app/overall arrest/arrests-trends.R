@@ -112,7 +112,6 @@ shinyServer <- function(input, output) {
   
   
   year_chosen <- reactive({
-   
     if ( "2019" %in% input$year){
       df1_2019 = df[df$year=='2019',]
       data <- df1_2019
@@ -128,7 +127,6 @@ shinyServer <- function(input, output) {
       data <- df1_2021
       return( data ) 
     }
- 
   })
   
   
@@ -160,12 +158,7 @@ shinyServer <- function(input, output) {
         theme(axis.text.x = element_text(face="bold", size=11, angle = 90), axis.text.y = element_text(face="bold", size=11))
       
       ggplotly(width = 750)
-      
-      
-      
     }
-  
-    
   )
   
   
