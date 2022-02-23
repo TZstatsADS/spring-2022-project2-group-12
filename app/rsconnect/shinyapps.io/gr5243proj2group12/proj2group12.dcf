@@ -5,10 +5,10 @@ account: gr5243proj2group12
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 5716219
-bundleId: 5610712
+bundleId: 5611463
 url: https://gr5243proj2group12.shinyapps.io/proj2group12/
-when: 1645639238.36154
-lastSyncTime: 1645639238.36156
+when: 1645652073.47771
+lastSyncTime: 1645652073.47772
 asMultiple: FALSE
 asStatic: FALSE
 ignoredFiles: .RData|README.md

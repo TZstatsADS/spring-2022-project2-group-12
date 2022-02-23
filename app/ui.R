@@ -68,8 +68,10 @@ ui <- navbarPage(
   #################### tab 2: map  ####################
   tabPanel("Map",
            h2("Confirmed Cases in Each Borough", align = 'center'),
-           tags$p("Interactive Map: Zoom in or out to see the size of confirmed Covid cases in each borough"), 
-           leafletOutput("nyc_map_covid", width = "100%", height = 800)
+           tags$p("Interactive Map: Zoom in or out to see the size of confirmed Covid cases in each borough"),
+           tags$p("Note that the size of the circles represents the number of comfirmed Covid cases within each zipcode boundaries"),
+           leafletOutput("nyc_map_covid", width = "100%", height = 800),
+           h5("Note: Radius = Number of Comfirmed Covid Cases/1000", align = 'right')
   ),
 
 
