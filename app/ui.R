@@ -66,12 +66,12 @@ ui <- navbarPage(
     )
   ),
   #################### tab 2:  ####################
-  # tabPanel("Map",
-  #          h2("Confirmed Cases in Each Borough", align = 'center'),
-  #          leafletOutput("nyc_map_covid", width = "100%", height = 800)
-  # ),
-  # 
-  # 
+  tabPanel("Map",
+           h2("Confirmed Cases in Each Borough", align = 'center'),
+           leafletOutput("nyc_map_covid", width = "100%", height = 800)
+  ),
+
+
 
   #################### tab 3: Map#################### 
 

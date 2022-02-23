@@ -120,46 +120,46 @@ if (!require("rsconnect")) {
 # 
 # # Get NYC covid data based on Modified Zip code
 # # First get ZCTA (zip code) to MODZCTA data:
-# zcta_to_modzcta <- read.csv("https://raw.githubusercontent.com/nychealth/coronavirus-data/master/Geography-resources/ZCTA-to-MODZCTA.csv" )
+zcta_to_modzcta <- read.csv("https://raw.githubusercontent.com/nychealth/coronavirus-data/master/Geography-resources/ZCTA-to-MODZCTA.csv" )
 # 
 # # NYC Covid data by MODZCTA(cummulative):
-# data_by_modzcta <- read.csv('https://raw.githubusercontent.com/nychealth/coronavirus-data/master/totals/data-by-modzcta.csv' )
+data_by_modzcta <- read.csv('https://raw.githubusercontent.com/nychealth/coronavirus-data/master/totals/data-by-modzcta.csv' )
 # 
-# nyc_covid_data <- data_by_modzcta %>%
-#   select(
-#     "MODIFIED_ZCTA","NEIGHBORHOOD_NAME", 
-#     "BOROUGH_GROUP", "COVID_CASE_COUNT", 
-#     "COVID_CASE_RATE", "PERCENT_POSITIVE", "COVID_DEATH_COUNT",
-#     "TOTAL_COVID_TESTS"
-#   )
-# 
-# # Import geojson file from NYC open data
-# nyc_zipcode_geo <- sf::st_read("../data/ZIP_CODE_040114.shp") %>%
-#   sf::st_transform('+proj=longlat +datum=WGS84')
-# nyc_zipcode_geo$ZIPCODE <- type.convert(nyc_zipcode_geo$ZIPCODE, as.is = TRUE)
-# 
-# # Import longitude and latitude data
-# uszips <- read.csv("../data/uszips.csv")
-# nyczips <- uszips[uszips$state_name == "New York",]
-# 
-# nyc_lat_table <- nyczips %>%
-#   select(
-#     "zip", "lat", "lng")
-# 
-# # Match zipcode with longitude and latitude data and merge new data
-# nyc_covid_data <- nyc_covid_data %>%
-#   mutate(
-#     LAT_repre = nyczips$lat[
-#       match(nyc_covid_data$MODIFIED_ZCTA, nyczips$zip) ],
-# 
-#     LNG_repre = nyczips$lng[ 
-#       match(nyc_covid_data$MODIFIED_ZCTA, nyczips$zip) ]
-#   )
+nyc_covid_data <- data_by_modzcta %>%
+    select(
+      "MODIFIED_ZCTA","NEIGHBORHOOD_NAME",
+      "BOROUGH_GROUP", "COVID_CASE_COUNT",
+      "COVID_CASE_RATE", "PERCENT_POSITIVE", "COVID_DEATH_COUNT",
+      "TOTAL_COVID_TESTS"
+    )
+  
+  # Import geojson file from NYC open data
+  nyc_zipcode_geo <- sf::st_read("./data/ZIP_CODE_040114.shp") %>%
+    sf::st_transform('+proj=longlat +datum=WGS84')
+  nyc_zipcode_geo$ZIPCODE <- type.convert(nyc_zipcode_geo$ZIPCODE, as.is = TRUE)
+  
+  # Import longitude and latitude data
+  uszips <- read.csv("./data/uszips.csv")
+  nyczips <- uszips[uszips$state_name == "New York",]
+  
+  nyc_lat_table <- nyczips %>%
+    select(
+      "zip", "lat", "lng")
+  
+  # Match zipcode with longitude and latitude data and merge new data
+  nyc_covid_data <- nyc_covid_data %>%
+    mutate(
+      LAT_repre = nyczips$lat[
+        match(nyc_covid_data$MODIFIED_ZCTA, nyczips$zip) ],
+  
+      LNG_repre = nyczips$lng[
+        match(nyc_covid_data$MODIFIED_ZCTA, nyczips$zip) ]
+    )
 
 ## Hate Crime Data Manipulate
 #Import Data
-hate_data <- read.csv("../data/NYPD_Hate_Crimes.csv")
-covid_data <- read.csv("../data/cases-by-day.csv")
+hate_data <- read.csv("./data/NYPD_Hate_Crimes.csv")
+covid_data <- read.csv("./data/cases-by-day.csv")
 
 #Add date before 2020/02 for Covid data 
 tmp <- data.frame("CASE_COUNT"=rep(0,13),"BX_CASE_COUNT"=rep(0,13),"BK_CASE_COUNT"=rep(0,13),"MN_CASE_COUNT"=rep(0,13),"QN_CASE_COUNT"=rep(0,13),"SI_CASE_COUNT"=rep(0,13),"MM"=rep(0,13),"YY"=c(rep("2019",12),"2020"),"YY_MM"=c("2019/1", "2019/2", "2019/3", "2019/4", "2019/5", "2019/6", "2019/7", "2019/8", "2019/9", "2019/10", "2019/11", "2019/12", "2020/1"))
@@ -212,8 +212,8 @@ data_m_loc <- mod_data[mod_data$Bias.Motive.Description=="ANTI ASIAN",] %>%
 #### #### #### ####    shooting tap data processing #### #### #### #### #### #### 
 
 ######################## shooting trend plot data wrangling
-shooting_recent <- read_csv("../data/NYPD_Shooting_Incident_Data__Year_To_Date_.csv")
-shooting_historic <- read_csv("../data/NYPD_Shooting_Incident_Data__Historic.csv")
+shooting_recent <- read_csv("./data/NYPD_Shooting_Incident_Data__Year_To_Date_.csv")
+shooting_historic <- read_csv("./data/NYPD_Shooting_Incident_Data__Historic.csv")
 shooting_recent <- shooting_recent %>% rename(`Lon_Lat` = `New Georeferenced Column`)
 shooting_all <- rbind(shooting_recent, shooting_historic) # combine two datasets using rbind()
 
@@ -265,14 +265,14 @@ shooting_all_covid <- shooting_all %>%
 #saveRDS(shooting_map_sp, "shooting_map_sp.RDS")
 
 
-shooting_map_sp <- readRDS("../data/shooting_map_sp.RDS")
+shooting_map_sp <- readRDS("./data/shooting_map_sp.RDS")
 shooting_map_sp <- shooting_map_sp %>% arrange(OCCUR_YM)
 
 
 
 
 #########################Data processing for arrest part
-df <- read.csv("../data/Arrest_2019_2021.csv")
+df <- read.csv("./data/Arrest_2019_2021.csv")
 df$ARREST_DATE = as.Date(df$ARREST_DATE,format = "%Y-%m-%d")
 df$year = format(df$ARREST_DATE,'%Y')
 df$month = format(df$ARREST_DATE,'%m')
