@@ -140,7 +140,8 @@ ui <- navbarPage(
   
       mainPanel(
         plotlyOutput(outputId = "shooting"),
-        leafletOutput("shooting_map_interactive")
+        leafletOutput("shooting_map_interactive"),
+        tags$p("Notice: the color bins are not equally sized.")
       )
     )
   ),

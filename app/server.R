@@ -353,7 +353,7 @@ shinyServer <-function(input, output, session) {
         theme_classic() +
         theme(axis.text.x = element_text(face="bold", size=11, angle = 90),axis.text.y = element_text(face="bold", size=11))+
         theme(legend.title = element_blank())+
-        scale_color_manual(labels = c("ANTI-ASIAN", 
+        scale_color_manual(labels = c("ANTI-BLACK", 
                                       "Covid New Cases"), 
                            values = c("ANTI-BLACK"="black", 
                                       "Covid New Cases"="light blue"))
