@@ -17,8 +17,8 @@ Term: Spring 2022
 
 + **Project summary**: 
 	+ This application specifically draws attention of how the pandemic affected the crime events in New York City. 
-         + The application start by examining the overall trend, and provide some interesting insights on the change of shooting cases, with a special focus on how the hate crime towards Asian people increased after the hit of Covid.
-          + Link to the app: https://gr5243proj2group12.shinyapps.io/proj2group12/ 
+	+ The application start by examining the overall trend, and provide some interesting insights on the change of shooting cases, with a special focus on how the hate crime towards Asian people increased after the hit of Covid.
+	+ Link to the app: https://gr5243proj2group12.shinyapps.io/proj2group12/ 
 
 + **Contribution statement**: ([default](doc/a_note_on_contributions.md)) 
 	+ All team members designed the study together.
@@ -27,7 +27,7 @@ Term: Spring 2022
 	+ Jiaxin Yu contributes to the ‘Shooting cases’ page.
 	+ Nichole Zhang contributes to the ‘Hate Crime’ page.
 	+ All team members helped in debugging and deploying the app.
-	+ Jiaxin You presents the project.
+	+ Jiaxin Yu presents the project.
 	+ All team members approve our work presented in this GitHub repository including this contributions statement. 
 
 
