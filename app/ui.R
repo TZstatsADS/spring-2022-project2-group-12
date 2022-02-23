@@ -65,7 +65,7 @@ ui <- navbarPage(
           ))
     )
   ),
-  #################### tab 2:  ####################
+  #################### tab 2: map  ####################
   tabPanel("Map",
            h2("Confirmed Cases in Each Borough", align = 'center'),
            leafletOutput("nyc_map_covid", width = "100%", height = 800)
@@ -73,7 +73,52 @@ ui <- navbarPage(
 
 
 
-  #################### tab 3: Map#################### 
+  ################### tab 3: Arrest ##################
+  tabPanel("Arrest Records",
+           fluidPage(
+             titlePanel("Did the number of arrests in New York affected COVID?"),
+             tags$p("An unexpected fact: number of arrests decreased in 2020 than before COVID-19. But it is worth mentioning, with New York City reportedly experienced a dramatic increase of number in arrests in the month of May,2020 where the pandemic was at its peak.", style="color:black"),
+             #tags$p("This analysis helps individuals to learn more about the rise of arrests in NYC. It shows the rate of arrests with respect to each of the five boroughs in NYC", style="color:black"),
+             
+             
+             sidebarLayout(
+               sidebarPanel(
+                 
+                 helpText("Observe the number of arrests occured in New York City between 2019 and 2021
+                 by year or by month"),
+                 selectInput(inputId = "by", 
+                             label = h5("Select By Year or By Month"), 
+                             choices = list("Year" ,"Month")),
+                 
+                 helpText("Explore yearly arrest data with respect to location, level of offense, and perpetrator's race"),
+                 selectInput(inputId = "year",
+                             label = h5("Choose a specific time period"), 
+                             choices = c("Before Covid", "After Covid","2019","2020","2021")),
+               ),
+               
+               mainPanel(
+                 h3("Overall information of the arrest data:" ),
+                 plotlyOutput('Plotall1'),
+                 plotlyOutput('Plotall2'),
+                 h3("Detailed information in your choosing time period:" ),
+                 plotlyOutput('ARPlot1'),
+                 plotlyOutput('ARPlot2'),
+                 plotlyOutput('ARPlot3'),
+                 position = "right"
+               )
+             )
+           )
+  ),
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  #################### tab 4: shooting #################### 
 
 
   tabPanel(
@@ -98,7 +143,7 @@ ui <- navbarPage(
 
 
   
-  #################### tab 4: #################### 
+  #################### tab 5: hate crime #################### 
   tabPanel(
     "Hate Crime Trends",
     fluidPage(
@@ -128,51 +173,6 @@ ui <- navbarPage(
     )
     
   ),
-  
-  
-  ################### tab 5: Arrest
-  tabPanel("Arrest Records",
-           fluidPage(
-             titlePanel("Did the number of arrests in New York affected COVID?"),
-             tags$p("An unexpected fact: number of arrests decreased in 2020 than before COVID-19. But it is worth mentioning, with New York City reportedly experienced a dramatic increase of number in arrests in the month of May,2020 where the pandemic was at its peak.", style="color:black"),
-             #tags$p("This analysis helps individuals to learn more about the rise of arrests in NYC. It shows the rate of arrests with respect to each of the five boroughs in NYC", style="color:black"),
-             
-             
-             sidebarLayout(
-               sidebarPanel(
-                 
-                 helpText("Observe the number of arrests occured in New York City between 2019 and 2021
-                 by year or by month"),
-                 selectInput(inputId = "by", 
-                             label = h5("Select By Year or By Month"), 
-                             choices = list("Year" ,"Month")),
-                 
-                 helpText("Explore yearly arrest data with respect to location, level of offense, and perpetrator's race"),
-                 selectInput(inputId = "year",
-                             label = h5("Choose a specific year"), 
-                             choices = c("2019","2020","2021")),
-               ),
-               
-               mainPanel(
-                 h3("Overall information of the arrest data:" ),
-                 plotlyOutput('Plotall1'),
-                 
-                 h3("Detailed information in your choosing year:" ),
-                 plotlyOutput('ARPlot1'),
-                 plotlyOutput('ARPlot2'),
-                 plotlyOutput('ARPlot3'),
-                 position = "right"
-               )
-             )
-           )
-  ),
-  
-  
-  
-  
-  
-  
-  
   
   
   

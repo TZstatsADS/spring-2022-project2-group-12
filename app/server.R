@@ -65,8 +65,177 @@ shinyServer <-function(input, output, session) {
       leafletProxy("nyc_map_covid")
   }) # end of tab
   
+    ####################### Tab 3 Arrest ##################
+    
+    target <- c('Felony', 'Misdemeanor', 'Violation', 'Infractions')
+    year_chosen <- reactive({
+      if ( "2019" %in% input$year){
+        df1_2019 = df[df$year=='2019',]
+        data <- df1_2019
+        return( data ) 
+      }
+      if ( "2020" %in% input$year){
+        df1_2020 = df[df$year=='2020',]
+        data <- df1_2020
+        return( data ) 
+      }
+      if ( "2021" %in% input$year){
+        df1_2021 = df[df$year=='2021',]
+        data <- df1_2021
+        return( data ) 
+      }
+      if ( "Before Covid" %in% input$year){
+        df1_B = df%>%filter(ARREST_DATE <= "2020-03-01")
+        data <- df1_B
+        return( data ) 
+      }
+      if ( "After Covid" %in% input$year){
+        df1_A = df%>%filter(ARREST_DATE > "2020-03-01" )%>%filter(ARREST_DATE <= "2021-05-01" )
+        data <- df1_A
+        return( data ) 
+      }
+      
+      
+    })
+    
+    
+    output$Plotall1 <- renderPlotly(
+      if ( "Year" %in% input$by){
+        data <- df %>% group_by(ARREST_BORO, year) %>%
+          summarise(count = n())
+        ggplot(data, aes(x = year, y = count, group = ARREST_BORO, color = ARREST_BORO)) +
+          geom_line()+
+          scale_color_viridis(discrete = TRUE, option = "C") +
+          #scale_x_date(breaks = "1 month", date_labels = "%b-%y") +
+          labs(y = "Number of Arrests", x = "Time(Year)", title = "NYC Arrests Occurrence Trend of Each Location") +
+          guides(color=guide_legend(title="Location")) +
+          theme_classic() +
+          theme(axis.text.x = element_text(face="bold", size=11, angle = 90), axis.text.y = element_text(face="bold", size=11))
+        
+        ggplotly(width = 750)
+        
+      } else if ("Month" %in% input$by){
+        data <- df %>% group_by(ARREST_BORO, YY_MM) %>%
+          summarise(count = n())
+        ggplot(data, aes(x = YY_MM, y = count, group = ARREST_BORO, color = ARREST_BORO)) +
+          geom_line()+
+          scale_color_viridis(discrete = TRUE, option = "C") +
+          #scale_x_date(breaks = "1 month", date_labels = "%b-%y") +
+          labs(y = "Number of Arrests", x = "Time(Month)", title = "NYC Arrests Occurrence Trend of Each Loacation" ) +
+          guides(color=guide_legend(title="Location")) +
+          theme_classic() +
+          theme(axis.text.x = element_text(face="bold", size=11, angle = 90), axis.text.y = element_text(face="bold", size=11))
+        
+        ggplotly(width = 750)
+      }
+    )
+    
+    output$Plotall2 <- renderPlotly(
+      if ( "Year" %in% input$by){
+        data <- df %>% filter(LAW_CAT_CD %in% target) %>%
+          group_by(LAW_CAT_CD, year) %>%
+          summarise(count = n())
+        ggplot(data, aes(x = year, y = count, group = LAW_CAT_CD, color = LAW_CAT_CD)) +
+          geom_line()+
+          scale_color_viridis(discrete = TRUE, option = "C") +
+          #scale_x_date(breaks = "1 month", date_labels = "%b-%y") +
+          labs(y = "Number of Arrests", x = "Time(Year)", title = "NYC Arrests Occurrence Trend of Each Level of Offense ") +
+          guides(color=guide_legend(title="Level of Offense")) +
+          theme_classic() +
+          theme(axis.text.x = element_text(face="bold", size=11, angle = 90), axis.text.y = element_text(face="bold", size=11))
+        
+        ggplotly(width = 750)
+      
+      } else if ( "Month" %in% input$by){
+        data <- df %>% filter(LAW_CAT_CD %in% target) %>%
+          group_by(LAW_CAT_CD, YY_MM) %>%
+          summarise(count = n())
+        ggplot(data, aes(x = YY_MM, y = count, group = LAW_CAT_CD, color = LAW_CAT_CD)) +
+          geom_line()+
+          scale_color_viridis(discrete = TRUE, option = "C") +
+          #scale_x_date(breaks = "1 month", date_labels = "%b-%y") +
+          labs(y = "Number of Arrests", x = "Time(Month)", title = "NYC Arrests Occurrence Trend of Each Level of Offense ") +
+          guides(color=guide_legend(title="Level of Offense")) +
+          theme_classic() +
+          theme(axis.text.x = element_text(face="bold", size=11, angle = 90), axis.text.y = element_text(face="bold", size=11))
+        
+        ggplotly(width = 750)
+      }
+    )
+    
+    
+    
+    output$ARPlot1 <- renderPlotly({
+      target <- c('Felony', 'Misdemeanor', 'Violation', 'Infractions')
+      data <- year_chosen() %>% filter(LAW_CAT_CD %in% target) %>%
+        group_by(ARREST_BORO, LAW_CAT_CD) %>%
+        summarise(count = n())
+      
+      ggplot(data, aes(fill=ARREST_BORO, y=count, x=LAW_CAT_CD)) + 
+        geom_bar(position="fill", stat="identity") + scale_fill_brewer(palette = "Pastel2")+
+        labs(
+          title = paste("1. NYC Arrests in", input$year),
+          x = "Level of offense",
+          y = "Percent arrests w.r.t location"
+        ) +
+        theme_bw(base_size = 12)
+      
+      ggplotly(width = 750)
+    })
+    
+    
+    
+    
+    output$ARPlot2 <- renderPlotly({
+      target <- c('Felony', 'Misdemeanor', 'Violation', 'Infractions')
+      data <- year_chosen() %>% 
+        filter(LAW_CAT_CD %in% target) %>%
+        group_by(LAW_CAT_CD,ARREST_BORO) %>%
+        summarise(count = n())
+      
+      ggplot(data, aes(fill = LAW_CAT_CD, y = count, x = ARREST_BORO)) +
+        geom_bar(position="stack", stat="identity") +scale_fill_brewer(palette = "Pastel2")+
+        #scale_color_viridis(discrete = TRUE, option = "G") +
+        labs(y = "Number of crimes Occurred",
+             x = "Location",
+             title = paste("2. Level of Offense in Each Borough in", input$year)) +
+        guides(fill=guide_legend(title="Level of Offense")) +
+        theme_bw(base_size = 12)
+      
+      
+      ggplotly(width = 750)
+    })
+    
+    
+    output$ARPlot3 <- renderPlotly({
+      target <- c('Felony', 'Misdemeanor', 'Violation', 'Infractions')
+      data <- year_chosen() %>%
+        filter(LAW_CAT_CD %in% target) %>%
+        filter(PERP_RACE != 'AMERICAN INDIAN/ALASKAN NATIVE') %>%
+        group_by(LAW_CAT_CD,PERP_RACE) %>%
+        summarise(count = n())
+      
+      ggplot(data, aes(fill = LAW_CAT_CD, y = count, x = PERP_RACE)) +
+        geom_bar(position="stack", stat="identity") +scale_fill_brewer(palette = "Pastel2")+
+        #scale_color_viridis(discrete = TRUE, option = "G") +
+        labs(y = "Number of crimes Occurred",
+             x = "Perpetrator’s Race",
+             title = paste("3. Level of Offense in Each Race in", input$year)) +
+        guides(fill=guide_legend(title="Level of Offense")) +
+        theme_bw(base_size = 12) +
+        theme(axis.text.x = element_text(face="bold", size=11, angle = 90))
+      
+      ggplotly(width = 750, height = 550)
+    })
+    
+    # end of tab
+    
+    
+    
+    
+    
 
-    ####################### Tab 3 Shooting  ##################
+    ####################### Tab 4 Shooting  ##################
   
   output$shooting <- renderPlotly({
     if("Overall Period" %in% input$period){
@@ -136,7 +305,7 @@ shinyServer <-function(input, output, session) {
  # end of tab
   
   
-    ####################### Tab 4 Hate Crime ##################
+    ####################### Tab 5 Hate Crime ##################
   output$Plot1 <- renderPlotly({
     if(input$option1 == 1) {
       ggplot(data=anti_data_y)+
@@ -342,124 +511,6 @@ shinyServer <-function(input, output, session) {
   # end of tab
   
   
-  ####################### Tab 5 Arrest ##################
-  
-  
-  year_chosen <- reactive({
-    if ( "2019" %in% input$year){
-      df1_2019 = df[df$year=='2019',]
-      data <- df1_2019
-      return( data ) 
-    }
-    if ( "2020" %in% input$year){
-      df1_2020 = df[df$year=='2020',]
-      data <- df1_2020
-      return( data ) 
-    }
-    if ( "2021" %in% input$year){
-      df1_2021 = df[df$year=='2021',]
-      data <- df1_2021
-      return( data ) 
-    }
-  })
-  
-  
-  output$Plotall1 <- renderPlotly(
-    if ( "Year" %in% input$by){
-      data <- df %>% group_by(ARREST_BORO, year) %>%
-        summarise(count = n())
-      ggplot(data, aes(x = year, y = count, group = ARREST_BORO, color = ARREST_BORO)) +
-        geom_line()+
-        scale_color_viridis(discrete = TRUE, option = "C") +
-        #scale_x_date(breaks = "1 month", date_labels = "%b-%y") +
-        labs(y = "Number of Arrests", x = "Period", title = "NYC Arrests Occurrence By Year") +
-        guides(color=guide_legend(title="Location")) +
-        theme_classic() +
-        theme(axis.text.x = element_text(face="bold", size=11, angle = 90), axis.text.y = element_text(face="bold", size=11))
-      
-      ggplotly(width = 750)
-      
-    } else if ("Month" %in% input$by){
-      data <- df %>% group_by(ARREST_BORO, YY_MM) %>%
-        summarise(count = n())
-      ggplot(data, aes(x = YY_MM, y = count, group = ARREST_BORO, color = ARREST_BORO)) +
-        geom_line()+
-        scale_color_viridis(discrete = TRUE, option = "C") +
-        #scale_x_date(breaks = "1 month", date_labels = "%b-%y") +
-        labs(y = "Number of Arrests", x = "Period", title = "NYC Arrests Occurrence By Month" ) +
-        guides(color=guide_legend(title="Location")) +
-        theme_classic() +
-        theme(axis.text.x = element_text(face="bold", size=11, angle = 90), axis.text.y = element_text(face="bold", size=11))
-      
-      ggplotly(width = 750)
-    }
-  )
-  
-  
-  output$ARPlot1 <- renderPlotly({
-    target <- c('Felony', 'Misdemeanor', 'Violation', 'Infractions')
-    data <- year_chosen() %>% filter(LAW_CAT_CD %in% target) %>%
-      group_by(ARREST_BORO, LAW_CAT_CD) %>%
-      summarise(count = n())
-    
-    ggplot(data, aes(fill=ARREST_BORO, y=count, x=LAW_CAT_CD)) + 
-      geom_bar(position="fill", stat="identity") + scale_fill_brewer(palette = "Pastel2")+
-      labs(
-        title = paste("1. NYC Arrests in", input$year),
-        x = "Level of offense",
-        y = "Percent arrests w.r.t location"
-      ) +
-      theme_bw(base_size = 12)
-    
-    ggplotly(width = 750)
-  })
-  
-  
-  
-  
-  output$ARPlot2 <- renderPlotly({
-    target <- c('Felony', 'Misdemeanor', 'Violation', 'Infractions')
-    data <- year_chosen() %>% 
-      filter(LAW_CAT_CD %in% target) %>%
-      group_by(LAW_CAT_CD,ARREST_BORO) %>%
-      summarise(count = n())
-    
-    ggplot(data, aes(fill = LAW_CAT_CD, y = count, x = ARREST_BORO)) +
-      geom_bar(position="stack", stat="identity") +scale_fill_brewer(palette = "Pastel2")+
-      #scale_color_viridis(discrete = TRUE, option = "G") +
-      labs(y = "Number of crimes Occurred",
-           x = "Location",
-           title = paste("2. Level of Offense in Each Borough in", input$year)) +
-      guides(fill=guide_legend(title="Level of Offense")) +
-      theme_bw(base_size = 12)
-    
-    
-    ggplotly(width = 750)
-  })
-  
-  
-  output$ARPlot3 <- renderPlotly({
-    target <- c('Felony', 'Misdemeanor', 'Violation', 'Infractions')
-    data <- year_chosen() %>%
-      filter(LAW_CAT_CD %in% target) %>%
-      filter(PERP_RACE != 'AMERICAN INDIAN/ALASKAN NATIVE') %>%
-      group_by(LAW_CAT_CD,PERP_RACE) %>%
-      summarise(count = n())
-    
-    ggplot(data, aes(fill = LAW_CAT_CD, y = count, x = PERP_RACE)) +
-      geom_bar(position="stack", stat="identity") +scale_fill_brewer(palette = "Pastel2")+
-      #scale_color_viridis(discrete = TRUE, option = "G") +
-      labs(y = "Number of crimes Occurred",
-           x = "Perpetrator’s Race",
-           title = paste("3. Level of Offense in Each Race in", input$year)) +
-      guides(fill=guide_legend(title="Level of Offense")) +
-      theme_bw(base_size = 12) +
-      theme(axis.text.x = element_text(face="bold", size=11, angle = 90))
-    
-    ggplotly(width = 750, height = 550)
-  })
-  
-  # end of tab
-
+ 
 }
 
