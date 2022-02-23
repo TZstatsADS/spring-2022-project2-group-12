@@ -7,9 +7,9 @@
 #    http://shiny.rstudio.com/
 #
 
-# source("ui.R")
-
 library(shiny)
+#===============================================Shiny SERVER=====================================================
+# LOAD AND PREPARE DATA ####################################
 
 shooting_map_sp <- readRDS("./data/shooting_map_sp.RDS")
 shooting_map_sp <- shooting_map_sp %>% arrange(OCCUR_YM)
@@ -33,7 +33,7 @@ shinyServer <-function(input, output, session) {
     #left_join(nyc_shooting_data, by = c("ZIPCODE"="Zip"))
   
   
-    pal <- colorFactor(palette =c('lightblue1', 'lightpink', 'darksalmon', 'darkseagreen2', 'lavender'), domain = nyc_covid_data$BOROUGH_GROUP)
+    pal <- colorFactor(palette =c('#015B89', '#AB0400', '#CB6A0E', '#D9B30B', '#067D61'), domain = nyc_covid_data$BOROUGH_GROUP)
   
     observe({
       output$nyc_map_covid = renderLeaflet({
@@ -52,7 +52,7 @@ shinyServer <-function(input, output, session) {
           addCircleMarkers(
             data = nyc_zipcode_geo,
             lng = ~LNG_repre, lat = ~LAT_repre,
-            color = ~pal(BOROUGH_GROUP), fillOpacity = 0.8,
+            color = ~pal(BOROUGH_GROUP), fillOpacity = 0.7,
             radius = ~(COVID_CASE_COUNT)/1000,
             popup = ~(paste0(
               "<b>Zip Code: ", ZIPCODE,
@@ -229,10 +229,6 @@ shinyServer <-function(input, output, session) {
     })
     
     # end of tab
-    
-    
-    
-    
     
 
     ####################### Tab 4 Shooting  ##################
@@ -510,7 +506,5 @@ shinyServer <-function(input, output, session) {
   
   # end of tab
   
-  
- 
-}
 
+}

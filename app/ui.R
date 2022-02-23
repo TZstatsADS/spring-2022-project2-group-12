@@ -48,7 +48,7 @@ ui <- navbarPage(
         tags$p(
           style = "padding: 3%; background-color: white; font-family: alegreya; font-size: 100%; opacity: 0.90",
           "The hit of Covid-19 pandemic has surly impacted every aspect of our lives. This application specifically draws attention of how the pandemic affected the", strong("crime events in New York City"),". 
-          We start by examining the overall trend, and provide some interesting insights on the change of shooting cases, with a special focus on how the hate crime toward Asian people arose after the hit of covid."
+          The application start by examining the", strong("overall trend"), ", and provide some interesting insights on the change of", strong("shooting cases"), ", with a special focus on how the", strong("hate crime"), "towards Asian people increased after the hit of Covid."
         )),
         absolutePanel(
           style = "background-color: white",
@@ -68,6 +68,7 @@ ui <- navbarPage(
   #################### tab 2: map  ####################
   tabPanel("Map",
            h2("Confirmed Cases in Each Borough", align = 'center'),
+           tags$p("Interactive Map: Zoom in or out to see the size of confirmed Covid cases in each borough"), 
            leafletOutput("nyc_map_covid", width = "100%", height = 800)
   ),
 
@@ -77,7 +78,8 @@ ui <- navbarPage(
   tabPanel("Arrest Records",
            fluidPage(
              titlePanel("Did the number of arrests in New York affected COVID?"),
-             tags$p("An unexpected fact: number of arrests decreased in 2020 than before COVID-19. But it is worth mentioning, with New York City reportedly experienced a dramatic increase of number in arrests in the month of May,2020 where the pandemic was at its peak.", style="color:black"),
+             tags$p("An unexpected fact: number of arrests decreased in 2020 than before COVID-19. But it is worth mentioning, with New York City reportedly experienced a dramatic increase of number in arrests in the month of May, 2020 where the pandemic was at its peak.", style="color:black"),
+             tags$p("Use the dropbox to choose a time frame to have a closer look"),
              #tags$p("This analysis helps individuals to learn more about the rise of arrests in NYC. It shows the rate of arrests with respect to each of the five boroughs in NYC", style="color:black"),
              
              
@@ -123,6 +125,8 @@ ui <- navbarPage(
 
   tabPanel(
     "Shooting Trends",
+    titlePanel("Shooting Cases Before & After Covid Started: A Comparison"),
+    tags$p("Use the drop box to examine shooting cases across different boroughs"),
     sidebarLayout(
       sidebarPanel(
   
@@ -231,7 +235,9 @@ ui <- navbarPage(
     tags$a(
       href = "https://github.com/TZstatsADS/spring-2022-project2-group-12",
       "github.com/TZstatsADS/spring-2022-project2-group-12"
+    ),
+    tags$h2(
+      "Thank you for using the application!"
     )
-    
   ),
 )
